@@ -1,0 +1,42 @@
+{
+  "name": "rnspect",
+  "version": "1.0.0",
+  "description": "Lightweight remote logger and inspector SDK for React Native apps",
+  "main": "index.js",
+  "files": [
+    "index.js",
+    "README.md",
+    "LICENSE"
+  ],
+  "keywords": [
+    "react-native",
+    "inspector",
+    "debugger",
+    "logging",
+    "logger",
+    "devtools",
+    "remote-logger",
+    "websocket"
+  ],
+  "license": "MIT",
+  "author": "",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/rnspect"
+  },
+  "homepage": "https://github.com/yourusername/rnspect#readme",
+  "bugs": {
+    "url": "https://github.com/yourusername/rnspect/issues"
+  },
+  "engines": {
+    "node": ">=16"
+  },
+  "peerDependencies": {
+    "react-native": ">=0.70.0"
+  },
+  "peerDependenciesMeta": {
+    "expo-constants": {
+      "optional": true
+    }
+  }
+}
