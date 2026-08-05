@@ -1,5 +1,5 @@
 {
-  "name": "rnspect",
+  "name": "@the-order/rnspect",
   "version": "1.0.0",
   "description": "Lightweight remote logger and inspector SDK for React Native apps",
   "main": "index.js",
@@ -22,11 +22,11 @@
   "author": "",
   "repository": {
     "type": "git",
-    "url": "https://github.com/yourusername/rnspect"
+    "url": "https://github.com/the-bipu/rnspect"
   },
-  "homepage": "https://github.com/yourusername/rnspect#readme",
+  "homepage": "https://github.com/the-bipu/rnspect#readme",
   "bugs": {
-    "url": "https://github.com/yourusername/rnspect/issues"
+    "url": "https://github.com/the-bipu/rnspect/issues"
   },
   "engines": {
     "node": ">=16"
