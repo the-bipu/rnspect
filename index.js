@@ -10,6 +10,7 @@ if (typeof __DEV__ !== 'undefined' && __DEV__) {
   let reconnectTimer = null;
   let isConnected = false;
   let messageQueue = [];
+  let clientKey = null;
 
   let appName = 'React Native App';
   let bundleId = '';
@@ -28,9 +29,11 @@ if (typeof __DEV__ !== 'undefined' && __DEV__) {
             ?? '';
   } catch (_) {}
 
+  clientKey = bundleId ? `${bundleId}:${platform}` : `${appName}:${platform}`;
+
   function send(data) {
     try {
-      if (ws?.readyState === WebSocket.OPEN) {
+      if (ws && ws.readyState === 1) {
         ws.send(JSON.stringify(data));
       }
     } catch (_) {}
@@ -52,11 +55,9 @@ if (typeof __DEV__ !== 'undefined' && __DEV__) {
     }, reconnectDelay);
   }
 
-  function handleMessage(msg) {
-    if (msg.type === 'rni:hello') return;
-  }
-
   function connect() {
+    if (ws && (ws.readyState === 0 || ws.readyState === 1)) return;
+
     try {
       ws = new WebSocket(`ws://${HOST}:${PORT}`);
     } catch (_) {
@@ -67,13 +68,16 @@ if (typeof __DEV__ !== 'undefined' && __DEV__) {
     ws.onopen = () => {
       isConnected = true;
       reconnectDelay = BASE_RECONNECT_MS;
-      send({ type: 'rni:app-info', payload: { appName, bundleId, platform, version: '1.0.0' } });
+      send({ type: 'rni:app-info', payload: { appName, bundleId, platform, version: '1.0.0', clientKey } });
       messageQueue.forEach(send);
       messageQueue = [];
     };
 
     ws.onmessage = ({ data }) => {
-      try { handleMessage(JSON.parse(data)); } catch (_) {}
+      try {
+        const msg = JSON.parse(data);
+        if (msg.type === 'rni:hello') return;
+      } catch (_) {}
     };
 
     ws.onerror = () => {};
@@ -118,6 +122,4 @@ if (typeof __DEV__ !== 'undefined' && __DEV__) {
   console.info  = patch('info',  _console.log);
 
   connect();
-
-  _console.log(`[RNI] connected → ws://${HOST}:${PORT}`);
 }

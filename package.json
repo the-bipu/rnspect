@@ -1,6 +1,6 @@
 {
   "name": "@the-order/rnspect",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "Lightweight remote logger and inspector SDK for React Native apps",
   "main": "index.js",
   "files": [
