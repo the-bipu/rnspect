@@ -1,13 +1,3 @@
-<div align="center">
-
-<img src="https://img.shields.io/npm/v/rnspect?style=for-the-badge&color=61dafb&labelColor=20232a&label=rnspect" alt="npm version" />
-<img src="https://img.shields.io/npm/l/rnspect?style=for-the-badge&color=61dafb&labelColor=20232a" alt="license" />
-<img src="https://img.shields.io/npm/dm/rnspect?style=for-the-badge&color=61dafb&labelColor=20232a" alt="downloads" />
-<img src="https://img.shields.io/badge/platform-ios%20%7C%20android-61dafb?style=for-the-badge&labelColor=20232a" alt="platform" />
-
-<br />
-<br />
-
 ```
 ██████╗ ███╗   ██╗███████╗██████╗ ███████╗ ██████╗████████╗
 ██╔══██╗████╗  ██║██╔════╝██╔══██╗██╔════╝██╔════╝╚══██╔══╝
@@ -17,69 +7,76 @@
 ╚═╝  ╚═╝╚═╝  ╚═══╝╚══════╝╚═╝     ╚══════╝ ╚═════╝   ╚═╝   
 ```
 
+# rnspect
+
 **Lightweight remote logger & inspector SDK for React Native**
 
-*Stream your app's logs to the [RN Inspector](https://github.com/yourusername/rn-inspector) desktop app in real time — zero config, zero overhead in production.*
+Stream your app's logs to the [RN Inspector](https://github.com/the-bipu/react-native-inspector) desktop app in real time — zero config, zero overhead in production.
 
 </div>
 
 ---
 
-## ✨ Features
+## What is this?
 
-- 🔌 **Auto-connects** via WebSocket — no setup beyond one import
-- 📦 **Zero production overhead** — entire SDK is gated behind `__DEV__`
-- 🔄 **Auto-reconnects** with exponential backoff
-- 📬 **Message queuing** — logs are buffered while disconnected, then flushed on reconnect
-- 🧩 **Expo-compatible** — detects `expo-constants` automatically, no config needed
-- 🪶 **Tiny** — single file, no dependencies
+`rnspect` is a small SDK that intercepts your React Native `console` calls and forwards them over WebSocket to the [RN Inspector desktop app](https://github.com/the-bipu/react-native-inspector). Instead of digging through Metro's terminal output, you get a clean, dedicated interface for your logs — live, as they happen.
+
+It only runs in `__DEV__` mode. In production builds, the entire SDK is a no-op.
 
 ---
 
-## 📦 Installation
+## Requirements
+
+You need two things to use this:
+
+**1. The npm package** — installed in your React Native project (this repo).
+
+**2. The desktop app** — [react-native-inspector](https://github.com/the-bipu/react-native-inspector), which receives and displays the logs. Download the latest release for your platform from the [Releases page](https://github.com/the-bipu/react-native-inspector/releases).
+
+The desktop app needs to be running before (or while) your React Native app starts for logs to come through.
+
+---
+
+## Installation
 
 ```sh
-npm install @the-order/rnspect
+npm install rnspect
 ```
 
 ```sh
-yarn add @the-order/rnspect
+yarn add rnspect
 ```
 
 ---
 
-## 🚀 Usage
+## Usage
 
-Import once at the top of your entry file (e.g. `index.js` or `App.js`):
+Import once at the top of your entry file (`index.js` or `App.js`):
 
 ```js
-import '@the-order/rnspect';
+import 'rnspect';
 ```
 
-That's it. In `__DEV__` mode, all `console.log`, `console.warn`, `console.error`, and `console.info` calls are automatically forwarded to the [RN Inspector desktop app](https://github.com/yourusername/rn-inspector) running on your machine.
+That's it. In development mode, all `console.log`, `console.warn`, `console.error`, and `console.info` calls are automatically forwarded to the RN Inspector desktop app running on your machine.
 
 ---
 
-## ⚙️ How It Works
+## How it works
 
 ```
-┌─────────────────────┐        WebSocket (ws://localhost:8097)       ┌───────────────────────┐
-│   React Native App  │  ──────────────────────────────────────────► │  RN Inspector Desktop │
-│                     │                                              │                       │
-│  console.log(...)   │  →  rnspect patches console  →  enqueues  →  │  Displays live logs   │
-└─────────────────────┘                                              └───────────────────────┘
+React Native App  →  rnspect patches console  →  WebSocket (ws://localhost:8097)  →  RN Inspector Desktop
 ```
 
 1. On app start, `rnspect` opens a WebSocket connection to `localhost:8097`
 2. It patches `console.log/warn/error/info` to forward logs over the socket
-3. Logs are queued if the connection drops and flushed when it recovers
-4. In production (`__DEV__ === false`), nothing runs — zero impact
+3. If the connection drops, logs are queued and flushed automatically on reconnect
+4. In production (`__DEV__ === false`), nothing runs
 
 ---
 
-## 🔧 Configuration
+## Configuration
 
-No configuration required for default usage. The SDK connects to `localhost:8097` automatically.
+No configuration is required. The SDK connects to `localhost:8097` by default.
 
 | Setting | Default | Description |
 |---|---|---|
@@ -89,36 +86,26 @@ No configuration required for default usage. The SDK connects to `localhost:8097
 | Max reconnect delay | `30000ms` | Reconnect backoff ceiling |
 | Queue size | `200` | Max logs buffered while offline |
 
-> Custom configuration support is coming in v2.
+Custom configuration support is planned for a future release.
 
 ---
 
-## 🧩 Expo Support
+## Expo
 
-`rnspect` automatically reads your app name and bundle ID from `expo-constants` if available. No extra setup needed — just install and import.
+`rnspect` automatically reads your app name and bundle ID from `expo-constants` if it's installed. No extra setup needed.
 
 ---
 
-## 📋 Requirements
+## Peer dependencies
 
-| Peer dependency | Version |
+| Package | Version |
 |---|---|
 | `react-native` | `>= 0.70.0` |
 | `expo-constants` | optional |
 
 ---
 
-## 🗺️ Roadmap
-
-- [ ] Custom host/port configuration
-- [ ] Log filtering by level
-- [ ] Network request inspection
-- [ ] Redux / Zustand state streaming
-- [ ] VS Code extension
-
----
-
-## 🤝 Contributing
+## Contributing
 
 PRs and issues are welcome. Please open an issue first for major changes.
 
@@ -129,6 +116,6 @@ cd rnspect
 
 ---
 
-## 📄 License
+## License
 
 MIT © [Bipanshu Kumar](https://github.com/the-bipu)

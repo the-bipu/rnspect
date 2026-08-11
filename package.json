@@ -1,6 +1,9 @@
 {
-  "name": "@the-order/rnspect",
-  "version": "1.0.2",
+  "name": "@the-bipu/rnspect",
+  "version": "1.2.0",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
   "description": "Lightweight remote logger and inspector SDK for React Native apps",
   "main": "index.js",
   "files": [
